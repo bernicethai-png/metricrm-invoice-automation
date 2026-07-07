@@ -37,7 +37,7 @@ jobs:
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-          PDF_PATH: ./output_invoice.pdf
+          PDF_PATH: ./output/output_invoice.pdf
 
       - name: Upload logs on failure
         if: failure()
