@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.metricrm.invoice.generator</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/python3</string>
+		<string>/Users/bernice_thai/Claude/Projects/MetriCRM Auto Invoice/auto_invoice_generator.py</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<array>
+		<dict>
+			<key>Day</key>
+			<integer>3</integer>
+			<key>Hour</key>
+			<integer>11</integer>
+			<key>Minute</key>
+			<integer>30</integer>
+		</dict>
+	</array>
+	<key>StandardOutPath</key>
+	<string>/Users/bernice_thai/Library/Logs/metricrm_invoice.log</string>
+	<key>StandardErrorPath</key>
+	<string>/Users/bernice_thai/Library/Logs/metricrm_invoice_error.log</string>
+</dict>
+</plist>
