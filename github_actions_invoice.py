@@ -28,16 +28,10 @@ GMAIL_USER = os.getenv("GMAIL_USER", "")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD", "")
 PDF_PATH = os.getenv("PDF_PATH", "")  # 本地生成的PDF路径
 
-# 邮件配置
+# 邮件配置 - 测试模式
 SENDER_EMAIL = "bernice@webbalances.com"
-RECIPIENT_EMAIL = "finance-i@invite.my"
-BCC_EMAILS = [
-    "balon.goh@webbalances.com",
-    "janet@netregy.com",
-    "jimmy@invite.my",
-    "deric@netregy.com",
-    "qi_91@hotmail.com"
-]
+RECIPIENT_EMAIL = "bernice@webbalances.com"  # 测试：发送给自己
+BCC_EMAILS = []  # 测试：不发送BCC
 
 # Dropbox保存路径
 DROPBOX_FOLDER = "/Webbalances/Customer_Account/MetriCRM Auto Invoice"
@@ -147,9 +141,8 @@ Thank you for your support and it is a pleasure serving you
             part.add_header('Content-Disposition', f'attachment; filename= {invoice_info["invoice_num"]}.pdf')
             msg.attach(part)
 
-        # 发送邮件
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
+        # 发送邮件 - 使用公司邮箱SMTP (465 SSL)
+        with smtplib.SMTP_SSL('smtp.webbalances.com', 465) as server:
             server.login(GMAIL_USER, GMAIL_PASSWORD)
             server.send_message(msg)
 
