@@ -26,7 +26,20 @@ except ImportError:
 DROPBOX_TOKEN = os.getenv("DROPBOX_TOKEN", "")
 GMAIL_USER = os.getenv("GMAIL_USER", "")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD", "")
-PDF_PATH = os.getenv("PDF_PATH", "")  # 本地生成的PDF路径
+
+# PDF路径 - 支持多个可能的位置
+PDF_PATHS = [
+    os.getenv("PDF_PATH", ""),  # 优先使用环境变量
+    "./output/output_invoice.pdf",  # GitHub Actions生成的位置
+    "output/output_invoice.pdf",
+]
+
+# 找到第一个存在的PDF文件
+PDF_PATH = None
+for path in PDF_PATHS:
+    if path and Path(path).exists():
+        PDF_PATH = path
+        break
 
 # 邮件配置 - 测试模式
 SENDER_EMAIL = "bernice@webbalances.com"
