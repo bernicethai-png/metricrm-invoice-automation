@@ -37,6 +37,11 @@ jobs:
         run: |
           python generate_invoice_from_excel.py
 
+      - name: Add Logo to PDF
+        run: |
+          pip install PyPDF2 Pillow
+          python add_logo_to_pdf.py
+
       - name: Upload to Dropbox and Send Email
         run: |
           python github_actions_invoice_v2.py
