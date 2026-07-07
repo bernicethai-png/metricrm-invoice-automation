@@ -40,7 +40,7 @@ BCC_EMAILS = [
 ]
 
 # Dropbox保存路径
-DROPBOX_FOLDER = "/Webbalances/Customer_Account/Invite&Netergy/MetriCRM"
+DROPBOX_FOLDER = "/Webbalances/Customer_Account/MetriCRM Auto Invoice"
 
 # 签名
 EMAIL_SIGNATURE = """Best Regards
