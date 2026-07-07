@@ -111,11 +111,17 @@ def generate_pdf():
             ],
             capture_output=True,
             text=True,
-            timeout=30
+            timeout=60
         )
 
+        print(f"LibreOffice return code: {result.returncode}")
+        if result.stdout:
+            print(f"STDOUT:\n{result.stdout}")
+        if result.stderr:
+            print(f"STDERR:\n{result.stderr}")
+
         if result.returncode != 0:
-            print(f"❌ LibreOffice转换失败: {result.stderr}")
+            print(f"❌ LibreOffice转换失败")
             return False
 
         # 重命名PDF文件为标准名称
