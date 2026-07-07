@@ -54,3 +54,8 @@ jobs:
           path: |
             *.log
             output_invoice.pdf
+
+    - name: Add Logo to PDF
+        run: |
+          pip install PyPDF2 Pillow
+          python add_logo_to_pdf.py
