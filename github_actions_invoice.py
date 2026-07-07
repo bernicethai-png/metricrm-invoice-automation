@@ -172,16 +172,25 @@ def main():
 
     # 调试：打印PDF路径检测
     print(f"📂 PDF路径检测:")
+    print(f"   当前工作目录: {os.getcwd()}")
     print(f"   环境变量PDF_PATH: {os.getenv('PDF_PATH', 'NOT SET')}")
-    print(f"   检测到的PDF_PATH: {PDF_PATH}")
-    if PDF_PATH:
-        print(f"   文件是否存在: {os.path.exists(PDF_PATH)}")
+    print(f"   全局PDF_PATH: {PDF_PATH}")
 
-    # 列出当前目录的文件
-    import subprocess
-    print(f"   当前目录结构:")
-    result = subprocess.run(['ls', '-la'], capture_output=True, text=True)
-    print(result.stdout)
+    # 重新尝试检测PDF（以防路径变了）
+    detected_pdf = None
+    for path in PDF_PATHS + ['output/output_invoice.pdf', './output/output_invoice.pdf']:
+        full_path = Path(path).expanduser()
+        if full_path.exists():
+            detected_pdf = str(full_path)
+            print(f"   ✅ 找到PDF: {detected_pdf}")
+            break
+
+    if not detected_pdf:
+        print(f"   ❌ 无法找到PDF，已尝试的路径:")
+        for path in PDF_PATHS:
+            print(f"      - {path}")
+        print(f"      - output/output_invoice.pdf")
+        print(f"      - ./output/output_invoice.pdf")
 
     # 获取发票信息
     invoice_info = get_invoice_info()
@@ -189,19 +198,33 @@ def main():
     print(f"   号码: {invoice_info['invoice_num']}")
     print(f"   月份: {invoice_info['month_name']} {invoice_info['year']}")
 
+    # 使用检测到的PDF（或全局PDF_PATH作为后备）
+    pdf_to_use = detected_pdf or PDF_PATH
+
     # 检查PDF文件
-    if not PDF_PATH or not os.path.exists(PDF_PATH):
-        print(f"⚠️  找不到PDF文件: {PDF_PATH}")
+    if not pdf_to_use or not os.path.exists(pdf_to_use):
+        print(f"⚠️  找不到PDF文件: {pdf_to_use}")
         return False
 
+    print(f"📄 使用PDF文件: {pdf_to_use}")
+
     # 上传到Dropbox
-    if not upload_to_dropbox(PDF_PATH, invoice_info):
+    if not upload_to_dropbox(pdf_to_use, invoice_info):
         print("⚠️  Dropbox上传失败，继续发送邮件...")
+
+    # 发送邮件时使用全局PDF_PATH（需要更新send_email函数）
+    # 临时存储全局PDF_PATH
+    global PDF_PATH
+    old_pdf_path = PDF_PATH
+    PDF_PATH = pdf_to_use
 
     # 发送邮件
     if not send_email(invoice_info):
         print("❌ 邮件发送失败")
+        PDF_PATH = old_pdf_path
         return False
+
+    PDF_PATH = old_pdf_path
 
     print("✨ 发票已自动生成、保存到Dropbox并发送邮件！")
     return True
