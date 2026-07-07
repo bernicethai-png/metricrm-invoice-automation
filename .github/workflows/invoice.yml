@@ -39,6 +39,7 @@ jobs:
 
       - name: Add Logo to PDF
         run: |
+          pip install --upgrade reportlab PyPDF2 Pillow
           python add_logo_to_pdf.py
 
       - name: Upload to Dropbox and Send Email
