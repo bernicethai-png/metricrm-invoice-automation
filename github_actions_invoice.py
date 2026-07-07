@@ -170,6 +170,19 @@ def main():
     """主函数"""
     print("🚀 开始云端发票生成和发送流程...")
 
+    # 调试：打印PDF路径检测
+    print(f"📂 PDF路径检测:")
+    print(f"   环境变量PDF_PATH: {os.getenv('PDF_PATH', 'NOT SET')}")
+    print(f"   检测到的PDF_PATH: {PDF_PATH}")
+    if PDF_PATH:
+        print(f"   文件是否存在: {os.path.exists(PDF_PATH)}")
+
+    # 列出当前目录的文件
+    import subprocess
+    print(f"   当前目录结构:")
+    result = subprocess.run(['ls', '-la'], capture_output=True, text=True)
+    print(result.stdout)
+
     # 获取发票信息
     invoice_info = get_invoice_info()
     print(f"📋 发票信息:")
