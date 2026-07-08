@@ -54,7 +54,14 @@ print(f"📋 发票: {invoice_num} ({month_name})")
 
 # ===== 发送邮件 =====
 SENDER_EMAIL = "bernice@webbalances.com"
-RECIPIENT_EMAIL = "bernice@webbalances.com"
+RECIPIENT_EMAIL = "finance-i@invite.my"
+BCC_EMAILS = [
+    "balon.goh@webbalances.com",
+    "janet@netregy.com",
+    "jimmy@invite.my",
+    "deric@netregy.com",
+    "qi_91@hotmail.com"
+]
 
 try:
     subject = f"MetriCRM Monthly Invoice - {month_name} {today.year}"
@@ -95,6 +102,8 @@ try:
     msg = MIMEMultipart('alternative')
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
+    if BCC_EMAILS:
+        msg['Bcc'] = ', '.join(BCC_EMAILS)
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 
