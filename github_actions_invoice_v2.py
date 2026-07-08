@@ -96,25 +96,53 @@ Persiaran Wawasan, Pusat Bandar Puchong,
 47160 Puchong Selangor."""
 
 try:
-    subject = f"Monthly Invoice - {invoice_info['month_name']} {invoice_info['year']}"
-    body = f"""Hi Invite Finance,
+    subject = f"MetriCRM Monthly Invoice - {invoice_info['month_name']} {invoice_info['year']}"
 
-Herewith the MetriCRM invoice, please find your invoice attached.
-Invoice Number: {invoice_info['invoice_num']}
-Amount: RM320.00
+    html_body = f"""<html>
+<body style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #333;">
+    <p>Hi Invite Finance,</p>
 
-Thank you for your support and it is a pleasure serving you
+    <p>Herewith the MetriCRM {invoice_info['month_name']} invoice, please find your invoice attached.</p>
 
-{EMAIL_SIGNATURE}"""
+    <p>
+        <strong>Invoice Number:</strong> {invoice_info['invoice_num']}<br>
+        <strong>Amount:</strong> RM320.00
+    </p>
 
-    msg = MIMEMultipart()
+    <p>Thank you for your support and it is a pleasure serving you</p>
+
+    <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+
+    <p style="font-weight: bold; color: #d4a574; margin-bottom: 10px;">Bernice Thai</p>
+    <p style="font-size: 14px; color: #c41e3a; margin: 5px 0;">
+        Email: bernice@webbalances.com<br>
+        Phone: +6010 831 2238<br>
+        Website: www.webbalances.com
+    </p>
+
+    <hr style="border: none; border-top: 1px dashed #ccc; margin: 20px 0;">
+
+    <p style="font-size: 14px; font-weight: bold;">Webbalances Solution (003096168-D)</p>
+    <p style="font-size: 14px; margin: 5px 0;">
+        Unit 6, Level 4 Setiawalk Mall (Block K),<br>
+        Persiaran Wawasan, Pusat Bandar Puchong,<br>
+        47160 Puchong Selangor.
+    </p>
+</body>
+</html>"""
+
+    msg = MIMEMultipart('alternative')
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
     msg['Bcc'] = ', '.join(BCC_EMAILS)
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 
-    msg.attach(MIMEText(body, 'plain', 'utf-8'))
+    text_part = MIMEText(f"Hi Invite Finance,\n\nHerewith the MetriCRM {invoice_info['month_name']} invoice, please find your invoice attached.\nInvoice Number: {invoice_info['invoice_num']}\nAmount: RM320.00\n\nThank you for your support and it is a pleasure serving you", 'plain', 'utf-8')
+    html_part = MIMEText(html_body, 'html', 'utf-8')
+
+    msg.attach(text_part)
+    msg.attach(html_part)
 
     # 添加PDF附件
     if os.path.exists(PDF_PATH):
