@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload to Dropbox and Send Email
         run: |
-          python github_actions_invoice_v2.py
+          python send_invoice_email.py
         env:
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
