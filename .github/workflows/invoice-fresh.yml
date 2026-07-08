@@ -1,0 +1,56 @@
+name: MetriCRM Monthly Invoice Fresh
+
+on:
+  schedule:
+    - cron: '30 3 3 * *'
+  workflow_dispatch:
+
+jobs:
+  generate-and-send-invoice:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install dropbox openpyxl PyPDF2 Pillow reportlab
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libreoffice-calc xvfb
+
+      - name: Start virtual display
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          sleep 2
+
+      - name: Generate Invoice PDF from Excel
+        run: |
+          python generate_invoice_from_excel.py
+
+      - name: Upload to Dropbox and Send Email
+        run: |
+          python github_actions_invoice_v2.py
+        env:
+          DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          PDF_PATH: ./output/output_invoice.pdf
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-logs
+          path: |
+            *.log
+            output_invoice.pdf
